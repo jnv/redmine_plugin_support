@@ -1,8 +1,9 @@
-require 'cucumber/rake/task'
-
 module RedminePluginSupport
   class CucumberTask < GeneralTask
     def define
+
+      require 'cucumber/rake/task'
+
       # TODO: Requires webrat to be installed as a plugin....
       Cucumber::Rake::Task.new(:features) do |t|
         t.cucumber_opts = "--format pretty"

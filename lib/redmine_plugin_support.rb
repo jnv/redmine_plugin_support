@@ -7,22 +7,16 @@ require 'rake/tasklib'
 require 'redmine_plugin_support/redmine_helper'
 require 'redmine_plugin_support/general_task'
 require 'redmine_plugin_support/environment_task'
-require 'redmine_plugin_support/database_task'
-require 'redmine_plugin_support/cucumber_task'
-require 'redmine_plugin_support/metrics_task'
-require 'redmine_plugin_support/rdoc_task'
-require 'redmine_plugin_support/release_task'
-require 'redmine_plugin_support/rspec_task'
-require 'redmine_plugin_support/stats_task'
-require 'redmine_plugin_support/test_unit_task'
 
 module RedminePluginSupport
-  VERSION = '0.0.4'
+  VERSION = '0.0.5'
 
   @@options = { }
 
   class Base
     include Singleton
+    include Rake::DSL
+    extend Rake::DSL
 
     attr_accessor :project_name
     attr_accessor :tasks
@@ -49,20 +43,28 @@ module RedminePluginSupport
       plugin.tasks.each do |task|
         case task
         when :db
+          require 'redmine_plugin_support/database_task'
           RedminePluginSupport::DatabaseTask.new(:db)
         when :doc
+          require 'redmine_plugin_support/rdoc_task'
           RedminePluginSupport::RDocTask.new(:doc)
         when :spec
+          require 'redmine_plugin_support/rspec_task'
           RedminePluginSupport::RspecTask.new(:spec)
         when :test
+          require 'redmine_plugin_support/test_unit_task'
           RedminePluginSupport::TestUnitTask.new(:test)
         when :cucumber
+          require 'redmine_plugin_support/cucumber_task'
           RedminePluginSupport::CucumberTask.new(:features)
         when :release
+          require 'redmine_plugin_support/release_task'
           RedminePluginSupport::ReleaseTask.new(:release)
         when :stats
+          require 'redmine_plugin_support/stats_task'
           RedminePluginSupport::StatsTask.new(:stats)
         when :metrics
+          require 'redmine_plugin_support/metrics_task'
           RedminePluginSupport::MetricsTask.new(:metrics)
         when :clean
           require 'rake/clean'
